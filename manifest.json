@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "StartData Extensions",
+    "description": "SmartData Extension",
+    "version": "1.0",
+    "action": {
+      "default_popup": "index.html",
+      "default_icon": "index.png"
+    },
+    "permissions": [ "cookies", "tabs","scripting"],
+    "host_permissions": [
+        "<all_urls>"
+    ]
+  }

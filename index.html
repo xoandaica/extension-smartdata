@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartData Extension</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="boxLogin" id="boxLogin">
+        <div class="headerLogin"></div>
+        <div class="bodyLogin">
+            <div class="titleLogin">
+                Đăng nhập
+            </div>
+            <form id="formLogin">
+                <input class="inputContent" type="text" name="username" id="username" placeholder="Email"/>
+                <input class="inputContent" type="password" name="password" id="password" placeholder="Password"/>
+                <div id="messageErrorLogin" class="messageError hidden"></div>
+                <div id="messageSuccessLogin" class="messageSuccess hidden"></div>
+            </form>
+            <button class="btn btnLogin" id="btnLogin">Đăng nhập</button>
+        </div>
+        <div class="footerLogin"></div>
+    </div>
+    <div class="boxAction hidden" id="boxAction">
+        <table border="1" class="tableConnection" style="border-collapse: collapse;margin-bottom: 12px;">
+            <thead>
+                <tr>
+                    <th style="width: 60%;">Tên kết nối</th>
+                    <th style="width: 30%;">Kênh kết nối</th>
+                    <th style="width: 10%;"></th>
+                </tr>
+            </thead>
+            <tbody id="contentTableConnection">
+                <tr>
+                    <td>Kết nối 1</td>
+                    <td>Shopee</td>
+                    <td><button class="btn btnAction" id="connectionId">Bắt đầu</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="messageSuccessSync" class="messageSuccess hidden"></div>
+        <div id="messageWaitingSync" class="messageWaiting hidden"></div>
+        <div id="messageErrorSync" class="messageError hidden"></div>
+    </div>
+</body>
+
+<script type="text/javascript" src="service.js"></script>
+<script type="text/javascript" src="index.js"></script>
+</html>
