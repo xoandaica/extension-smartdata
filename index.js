@@ -29,7 +29,8 @@ function cookieinfo(){
         }
     });
 }
-window.onload=cookieinfo;
+
+window.onload = cookieinfo;
 
 function validateDataLogin(username, password){
     if((username || "").trim().length == 0){
@@ -132,6 +133,29 @@ function getAllConnection(){
    });
 }
 
+function checkToken(){
+    token = localStorage.getItem("token");
+    if(!token){
+        document.getElementById("boxLogin").classList.remove("hidden");
+        document.getElementById("boxAction").classList.add("hidden");
+    }else{
+        fetch(URL_BASE_SERVER + "api/auth/current",{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer'+ token
+            }
+        }).then(function(response){
+            document.getElementById("boxLogin").classList.add("hidden");
+            document.getElementById("boxAction").classList.remove("hidden");
+            getAllConnection();
+        }).catch(function(error){
+            document.getElementById("boxLogin").classList.remove("hidden");
+            document.getElementById("boxAction").classList.add("hidden");
+        })
+    }
+};
+checkToken();
+
 function asyncLogin(username, password){
     let formData = {username, password}
     fetch("https://powerdashboard.vn/api/auth/login", {
@@ -151,6 +175,7 @@ function asyncLogin(username, password){
                     document.getElementById("messageSuccessLogin").classList.add("hidden");
                     document.getElementById("boxLogin").classList.add("hidden");
                     document.getElementById("boxAction").classList.remove("hidden");
+                    localStorage.setItem("token", token);
                     getAllConnection();
                 }, 2000);
             });
