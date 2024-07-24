@@ -49,7 +49,7 @@ function startSyncShopeeShop(connectionId, token, cookie){
         cookie: cookie
     }
     toggleWaitingSync(true);
-    fetch(URL_BASE_LOCAL+"api/connect/synchroniseDataByExtension/"+connectionId, {
+    fetch(URL_BASE_SERVER+"api/connect/synchroniseDataByExtension/"+connectionId, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
