@@ -11,26 +11,55 @@ const DOMAIN_OF_SHOPEE = "banhang.shopee.vn"
 const DOMAIN_OF_SHOPEE2 = ".shopee.vn"
 const URL_BASE_SERVER = "https://powerdashboard.vn/"
 const URL_BASE_LOCAL = "http://localhost:8082/"
-var token = "";
 
-var listDomainNeedCookie = [DOMAIN_OF_SHOPEE,DOMAIN_OF_SHOPEE2];
-var dataCookie = {
-    [DOMAIN_OF_SHOPEE]: ""
-}
+const DATA_COMMONS = [
+    {
+        key: "ShoppeShop",
+        name: "Shopee Shop",
+        typeInformations: [6],
+        domains: ["banhang.shopee.vn", ".shopee.vn"],
+        reports: [
+            {
+                value: 1,
+                name: "Báo cáo tổng quan",
+                storageName: "Shopee-Tổng quan",
+                formatUrl: "",
+                dataParam: {
+
+                },
+                dataBody: {
+
+                }
+            },
+            {
+                value: 2,
+                name: "Báo cáo hiệu quả sản phẩm",
+                storageName: "Shopee-Hiệu quả sản phẩm",
+                formatUrl: "",
+                dataParam: {
+
+                },
+                dataBody: {
+                    
+                }
+            }
+        ],
+        cookie: ""
+    }
+]
+var token = "";
 
 function cookieinfo(){
     chrome.cookies.getAll({},function (cookies){
         for(i=0;i<cookies.length;i++){
-            if(listDomainNeedCookie.includes(cookies[i].domain)){
-                if(cookies[i].domain == DOMAIN_OF_SHOPEE || cookies[i].domain == DOMAIN_OF_SHOPEE2){
-                    dataCookie[DOMAIN_OF_SHOPEE] = dataCookie[DOMAIN_OF_SHOPEE] + (dataCookie[DOMAIN_OF_SHOPEE].length > 0 ? ";": "") + cookies[i].name +"="+cookies[i].value
+            for(let data of DATA_COMMONS){
+                if(data.domains.includes(cookies[i].domain)){
+                    data.cookie = data.cookie + (data.cookie.length > 0 ? ";": "") + cookies[i].name +"="+cookies[i].value
                 }
             }
         }
     });
 }
-
-window.onload = cookieinfo;
 
 function validateDataLogin(username, password){
     if((username || "").trim().length == 0){
@@ -101,7 +130,15 @@ function viewDataConnection(data){
         let content = `<tr>
                             <td>${item.name}</td>
                             <td>${getNameTypeInformation(item.typeInformation)}</td>
-                            <td><button class="btn btnAction" id="${item.id}" data-type="${item.typeInformation}">Bắt đầu</button></td>
+                            <td>
+                                <select connectionId="connectionId">
+                                    <option value="1">Đồng bộ báo cáo tổng quan</option>
+                                    <option value="2">Đồng bộ báo cáo hiệu quả</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn btnAction" style="margin-right:8px" connectionId="${item.id}" typeInformation="${item.typeInformation}">Đồng bộ báo cáo tổng quản</button>
+                            </td>
                         </tr>`;
         contentHtml += content;
     }
