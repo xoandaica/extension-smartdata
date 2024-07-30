@@ -39,15 +39,7 @@ function toggleErrorSync(flag){
     }
 }
 
-function startSyncShopeeShop(connectionId, token, cookie){
-    let now = new Date();
-    let dateStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    let dateEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-    let urlDownload = `https://banhang.shopee.vn/api/mydata/v4/dashboard/export/?period=real_time&start_ts=${dateStart.getTime()/1000}&end_ts=${Math.round(dateEnd.getTime()/1000)}`
-    let body = {
-        url: urlDownload,
-        cookie: cookie
-    }
+function handleUploadReport(connectionId, token, body){
     toggleWaitingSync(true);
     fetch(URL_BASE_SERVER+"api/connect/synchroniseDataByExtension/"+connectionId, {
         method: "POST",
@@ -70,4 +62,26 @@ function startSyncShopeeShop(connectionId, token, cookie){
             },2000)
         })
     })
+}
+
+function startSyncShopeeShop(typeReport, folderName, connectionId, token, cookie){
+    let now = new Date();
+    let dateStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    let dateEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    let SPC_CDS = cookie.substring(cookie.indexOf("SPC_CDS"));
+    SPC_CDS = SPC_CDS.substring(0, SPC_CDS.indexOf(";"));
+    let urlOverviewDownload = `https://banhang.shopee.vn/api/mydata/v4/dashboard/export/?period=real_time&start_ts=${dateStart.getTime()/1000}&end_ts=${Math.round(dateEnd.getTime()/1000)}`;
+    let urlPerformanceDownload = `https://banhang.shopee.vn/api/mydata/v2/product/performance/export/?start_ts=${dateStart.getTime()/1000}&end_ts=${Math.round(dateEnd.getTime()/1000)}&period=real_time&sort_by=&${SPC_CDS}&SPC_CDS_VER=2`;
+    let urlCheckDownloadSuccess = `https://banhang.shopee.vn/api/v3/settings/get_report/?${SPC_CDS}&SPC_CDS_VER=2&report_id=`;
+    let urlDownloadResult = `https://banhang.shopee.vn/api/v3/settings/download_report/?${SPC_CDS}&SPC_CDS_VER=2&report_id=`
+    let body = {
+        urlOverviewDownload,
+        urlPerformanceDownload,
+        urlCheckDownloadSuccess,
+        urlDownloadResult,
+        cookie,
+        typeReport,
+        folderName
+    }
+    handleUploadReport(connectionId, token, body);
 }

@@ -1,54 +1,3 @@
-const TYPE_SHOPEE = 6;//typeInformation
-const TYPE_SHOPEE_ADS = 10;
-const TYPE_SHOPEE_ADS2 = 13;
-const TYPE_TIKTOK_SHOP = 8;
-const TYPE_TIKTOK_ADS = 7;
-const TYPE_TIKTOK_ADS2 = 12;
-const TYPE_LAZADA = 9;
-const TYPE_FACEBOOK = 4;
-const TYPE_PANCAKE = 14;
-const DOMAIN_OF_SHOPEE = "banhang.shopee.vn"
-const DOMAIN_OF_SHOPEE2 = ".shopee.vn"
-const URL_BASE_SERVER = "https://powerdashboard.vn/"
-const URL_BASE_LOCAL = "http://localhost:8082/"
-
-const DATA_COMMONS = [
-    {
-        key: "ShoppeShop",
-        name: "Shopee Shop",
-        typeInformations: [6],
-        domains: ["banhang.shopee.vn", ".shopee.vn"],
-        reports: [
-            {
-                value: 1,
-                name: "Báo cáo tổng quan",
-                storageName: "Shopee-Tổng quan",
-                formatUrl: "",
-                dataParam: {
-
-                },
-                dataBody: {
-
-                }
-            },
-            {
-                value: 2,
-                name: "Báo cáo hiệu quả sản phẩm",
-                storageName: "Shopee-Hiệu quả sản phẩm",
-                formatUrl: "",
-                dataParam: {
-
-                },
-                dataBody: {
-                    
-                }
-            }
-        ],
-        cookie: ""
-    }
-]
-var token = "";
-
 function cookieinfo(){
     chrome.cookies.getAll({},function (cookies){
         for(i=0;i<cookies.length;i++){
@@ -60,6 +9,8 @@ function cookieinfo(){
         }
     });
 }
+
+window.onload = cookieinfo;
 
 function validateDataLogin(username, password){
     if((username || "").trim().length == 0){
@@ -79,66 +30,66 @@ function validateDataLogin(username, password){
 
 function startSync(event){
     let node = event.target;
-    let type = node.getAttribute("data-type");
-    let id = node.getAttribute("id");
-    switch(parseInt(type)){
-        case TYPE_SHOPEE:
-            startSyncShopeeShop(id, token, dataCookie[DOMAIN_OF_SHOPEE]);
-            break;
-        case TYPE_SHOPEE_ADS:
-        case TYPE_SHOPEE_ADS2:
-        case TYPE_TIKTOK_SHOP:
-        case TYPE_TIKTOK_ADS:
-        case TYPE_TIKTOK_ADS2:
-        case TYPE_LAZADA:
-        case TYPE_FACEBOOK:
-        case TYPE_PANCAKE:
-            break;
-        default:
-            break;
+    let type = parseInt(node.getAttribute("typeInformationId"));
+    let id = parseInt(node.getAttribute("connectionId"));
+    let typeReport = parseInt(document.getElementById(`typeReport${id}`).value);
+    for(let item of DATA_COMMONS){
+        if(item.typeInformations.includes(type)){
+            let folderName = "";
+            if(item.reports){
+                for(let report of item.reports){
+                    if(report.value == typeReport){
+                        folderName = report.storageName;
+                    }
+                }
+            }
+            if(item.key === "ShoppeShop"){
+                startSyncShopeeShop(typeReport, folderName, id, token, item.cookie)
+            }else if(item.key === "TikTokShop"){
+
+            }else if(item.key === "Lazada"){
+
+            }
+        }
     }
 }
 
 function getNameTypeInformation(type){
-    switch(type){
-        case TYPE_SHOPEE:
-            return "Shopee";
-        case TYPE_SHOPEE_ADS:
-            return "Shopee Ads";
-        case TYPE_SHOPEE_ADS2:
-            return "Shopee Ads";
-        case TYPE_TIKTOK_SHOP:
-            return "TikTok Shop";
-        case TYPE_TIKTOK_ADS:
-            return "TikTok Ads";
-        case TYPE_TIKTOK_ADS2:
-            return "TikTok Ads";
-        case TYPE_LAZADA:
-            return "Lazada";
-        case TYPE_FACEBOOK:
-            return "Facebook";
-        case TYPE_PANCAKE:
-            return "Pancake";
-        default:
-            return "Không xác định";
+    for(let item of DATA_COMMONS){
+        if(item.typeInformations.includes(type)){
+            return item.name;
+        }
     }
+    return "Không xác định";
+}
+
+function getComboOptionExport(connectionInfo){
+    for(let item of DATA_COMMONS){
+        if(item.typeInformations.includes(connectionInfo.typeInformation)){
+            if(item.reports){
+                let option = "";
+                for(let opt of item.reports){
+                    option += `<option value="${opt.value}">${opt.name}</option>`;
+                }
+                return `<select id="typeReport${connectionInfo.id}" style="height:36px" connectionId="${connectionInfo.id}">
+                                ${option}
+                            </select>`
+            }
+        }
+    }
+    return "";
 }
 
 function viewDataConnection(data){
     let contentHtml = "";
     for(let item of data){
-        let content = `<tr>
+        let contentSelect = getComboOptionExport(item);
+        let contentButtonSync = `<button class="btn btnAction" connectionId="${item.id}" typeInformationId="${item.typeInformation}">Bắt đầu</button>`
+        let content = `<tr style="height:36px">
                             <td>${item.name}</td>
                             <td>${getNameTypeInformation(item.typeInformation)}</td>
-                            <td>
-                                <select connectionId="connectionId">
-                                    <option value="1">Đồng bộ báo cáo tổng quan</option>
-                                    <option value="2">Đồng bộ báo cáo hiệu quả</option>
-                                </select>
-                            </td>
-                            <td>
-                                <button class="btn btnAction" style="margin-right:8px" connectionId="${item.id}" typeInformation="${item.typeInformation}">Đồng bộ báo cáo tổng quản</button>
-                            </td>
+                            <td>${contentSelect}</td>
+                            <td>${contentSelect != "" ? contentButtonSync : ""}</td>
                         </tr>`;
         contentHtml += content;
     }
@@ -179,12 +130,17 @@ function checkToken(){
         fetch(URL_BASE_SERVER + "api/auth/current",{
             method: "GET",
             headers: {
-                'Authorization': 'Bearer'+ token
+                'Authorization': 'Bearer '+ token
             }
         }).then(function(response){
-            document.getElementById("boxLogin").classList.add("hidden");
-            document.getElementById("boxAction").classList.remove("hidden");
-            getAllConnection();
+            if(response.status == 200){
+                document.getElementById("boxLogin").classList.add("hidden");
+                document.getElementById("boxAction").classList.remove("hidden");
+                getAllConnection();
+            }else{
+                document.getElementById("boxLogin").classList.remove("hidden");
+                document.getElementById("boxAction").classList.add("hidden");
+            }
         }).catch(function(error){
             document.getElementById("boxLogin").classList.remove("hidden");
             document.getElementById("boxAction").classList.add("hidden");
