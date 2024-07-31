@@ -8,6 +8,36 @@ function cookieinfo(){
             }
         }
     });
+
+    chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
+        if(tabs){
+            for(let tab of tabs){
+                chrome.scripting.executeScript({
+                    target: { tabId: tab.id },
+                    func: () => {
+                      return JSON.stringify(localStorage)
+                    }
+                }).then(function(data){
+                    for(let item of data){
+                        if(item.result){
+                            item.result = JSON.parse(item.result);
+                            Object.keys(item.result).forEach(keyLocalStorage => {
+                                if(keyLocalStorage === "__tea_cache_tokens_4068"){
+                                    let content = JSON.parse(item.result[keyLocalStorage]);
+                                    for(let dataCo of DATA_COMMONS){
+                                        if(dataCo.key == "TikTokShop"){
+                                            dataCo.userId = content.user_unique_id
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }
+                    console.log(DATA_COMMONS)
+                })
+            }
+        }
+    })
 }
 
 window.onload = cookieinfo;
@@ -46,7 +76,7 @@ function startSync(event){
             if(item.key === "ShoppeShop"){
                 startSyncShopeeShop(typeReport, folderName, id, token, item.cookie)
             }else if(item.key === "TikTokShop"){
-
+                startSyncTiktokShop(typeReport, folderName, id, token, item.cookie, item.userId);
             }else if(item.key === "Lazada"){
 
             }
@@ -151,7 +181,7 @@ checkToken();
 
 function asyncLogin(username, password){
     let formData = {username, password}
-    fetch("https://powerdashboard.vn/api/auth/login", {
+    fetch(URL_BASE_SERVER + "api/auth/login", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {

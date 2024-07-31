@@ -85,3 +85,73 @@ function startSyncShopeeShop(typeReport, folderName, connectionId, token, cookie
     }
     handleUploadReport(connectionId, token, body);
 }
+
+function startSyncTiktokShop(typeReport, folderName, connectionId, token, cookie, userId){
+    let now = new Date();
+    let dateStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    let dateEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    let urlOverviewDownload = `https://seller-vn.tiktok.com/api/v3/insights/seller/shop/overview/performance/stats/export?locale=vi-VN&language=vi-VN&oec_seller_id=${userId}&aid=4068`;
+    let urlDownloadFileOverview = `https://seller-vn.tiktok.com/api/v1/insights/seller/shop/export/file/%s?aid=4068&language=vi-VN&oec_seller_id=${userId}&use_content_type_definition=1`;
+    let urlPerformanceDownload = `https://seller-vn.tiktok.com/api/v2/insights/seller/ttp/product/list/export?locale=vi-VN&language=vi-VN&oec_seller_id=${userId}&aid=4068`;
+    let urlDownloadFilePerformance = `https://seller-vn.tiktok.com%s?aid=4068&language=vi-VN&oec_seller_id=${userId}&use_content_type_definition=1`
+    let body = {
+        urlOverviewDownload,
+        urlDownloadFileOverview,
+        urlPerformanceDownload,
+        urlDownloadFilePerformance,
+        cookie,
+        typeReport,
+        folderName,
+        bodyOverview: {
+            "request": {
+                "params": [
+                    {
+                        "time_descriptor": {
+                            "start": "%s",
+                            "end": "%s",
+                            "timezone_offset": 25200,
+                            "scenario": 7,//4 - 7D
+                            "granularity": "1D",
+                            "with_previous_period": false
+                        },
+                        "stats_types": [
+                            1,
+                            4,
+                            5,
+                            10,
+                            11,
+                            12,
+                            13,
+                            14,
+                            15,
+                            20
+                        ]
+                    }
+                ]
+            }
+        },
+        bodyPerformance: {
+            "request": {
+                "list_control": {
+                    "rules": [
+                        {
+                            "direction": 2,
+                            "field": "gmv"
+                        }
+                    ],
+                    "pagination": {
+                        "size": 13,
+                        "page": 0
+                    }
+                },
+                "filter": {},
+                "time_descriptor": {
+                    "start": "%s",
+                    "end": "%s"
+                },
+                "search": {}
+            }
+        }
+    }
+    handleUploadReport(connectionId, token, body);
+}

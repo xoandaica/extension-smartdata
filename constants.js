@@ -27,8 +27,9 @@ const DATA_COMMONS = [
         key: "TikTokShop",
         name: "Tiktok Shop",
         typeInformations: [8],
-        domains: [],
+        domains: ["seller-vn.tiktok.com",".tiktok.com"],
         cookie: "",
+        userId: "",
         reports: [
             {
                 value: 1,
