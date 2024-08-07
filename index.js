@@ -8,7 +8,7 @@ function cookieinfo(){
             }
         }
     });
-
+    //localStorage
     chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
         if(tabs){
             for(let tab of tabs){
@@ -29,11 +29,53 @@ function cookieinfo(){
                                             dataCo.userId = content.user_unique_id
                                         }
                                     }
+                                }else if(keyLocalStorage === "ShopeeOrderDisplayColumns"){
+                                    let content = JSON.parse(item.result[keyLocalStorage]);
+                                    for(let dataCo of DATA_COMMONS){
+                                        if(dataCo.key == "Salework"){
+                                            dataCo.displayColumns = content
+                                        }
+                                    }
                                 }
                             })
                         }
                     }
-                    console.log(DATA_COMMONS)
+                })
+            }
+        }
+    })
+    //sessionStorage
+    chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
+        if(tabs){
+            for(let tab of tabs){
+                chrome.scripting.executeScript({
+                    target: { tabId: tab.id },
+                    func: () => {
+                      return JSON.stringify(sessionStorage)
+                    }
+                }).then(function(data){
+                    for(let item of data){
+                        if(item.result){
+                            item.result = JSON.parse(item.result);
+                            Object.keys(item.result).forEach(keySessionStorage => {
+                                if(keySessionStorage === "_um_dat_uhsetn"){
+                                    let content = item.result[keySessionStorage];
+                                    for(let dataCo of DATA_COMMONS){
+                                        if(dataCo.key == "Salework"){
+                                            dataCo.companyId = content
+                                        }
+                                    }
+                                }else if(keySessionStorage === "_um_dat_umsvtn"){
+                                    let content = item.result[keySessionStorage];
+                                    for(let dataCo of DATA_COMMONS){
+                                        if(dataCo.key == "Salework"){
+                                            dataCo.token = content
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }
                 })
             }
         }
@@ -63,13 +105,18 @@ function startSync(event){
     let type = parseInt(node.getAttribute("typeInformationId"));
     let id = parseInt(node.getAttribute("connectionId"));
     let typeReport = parseInt(document.getElementById(`typeReport${id}`).value);
+    if(isNaN(typeReport)){
+        typeReport = document.getElementById(`typeReport${id}`).value
+    }
     for(let item of DATA_COMMONS){
         if(item.typeInformations.includes(type)){
             let folderName = "";
+            let inforReport = null;
             if(item.reports){
                 for(let report of item.reports){
                     if(report.value == typeReport){
                         folderName = report.storageName;
+                        inforReport = report;
                     }
                 }
             }
@@ -79,6 +126,11 @@ function startSync(event){
                 startSyncTiktokShop(typeReport, folderName, id, token, item.cookie, item.userId);
             }else if(item.key === "Lazada"){
 
+            }else if(item.key === "Salework"){
+                inforReport["companyId"] = item.companyId;
+                inforReport["token"] = item.token;
+                inforReport["displayColumns"] = item.displayColumns;
+                startSyncSalework(inforReport, id, token, item.cookie);
             }
         }
     }

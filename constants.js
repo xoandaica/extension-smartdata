@@ -94,4 +94,52 @@ const DATA_COMMONS = [
         domains: ["banhang.shopee.vn", ".shopee.vn"],
         cookie: "",
     },
+    {
+        key: "Salework",
+        name: "Salework",
+        typeInformations: [16],
+        domains: ["stock.salework.net",".salework.net"],
+        cookie: "",
+        token: "",
+        companyId: "",
+        displayColumns: [],
+        reports: [
+            {
+                value: "Salework",
+                name: "Danh sách đơn hàng bán ngoài sàn",
+                storageName: "Orders",
+                formatUrl: "",
+            },
+            {
+                value: "Shopee",
+                name: "Danh sách đơn hàng shopee",
+                storageName: "Orders",
+                formatUrl: ""
+            },
+            {
+                value: "Lazada",
+                name: "Danh sách đơn hàng lazada",
+                storageName: "Orders",
+                formatUrl: ""
+            },
+            {
+                value: "Tiki",
+                name: "Danh sách đơn hàng tiki",
+                storageName: "Orders",
+                formatUrl: ""
+            },
+            {
+                value: "Tiktok",
+                name: "Danh sách đơn hàng tiktok",
+                storageName: "Orders",
+                formatUrl: ""
+            },
+            {
+                value: "STORE",
+                name: "Danh sách đơn hàng bán tại cửa hàng",
+                storageName: "Orders",
+                formatUrl: ""
+            }
+        ],
+    },
 ]

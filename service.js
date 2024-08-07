@@ -155,3 +155,35 @@ function startSyncTiktokShop(typeReport, folderName, connectionId, token, cookie
     }
     handleUploadReport(connectionId, token, body);
 }
+
+function startSyncSalework(infoReport, connectionId, token, cookie){
+    let now = new Date();
+    let dateStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    let dateEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    let SPC_CDS = cookie.substring(cookie.indexOf("SPC_CDS"));
+    SPC_CDS = SPC_CDS.substring(0, SPC_CDS.indexOf(";"));
+    let body = {
+        url: "https://stock.salework.net/api/v2/order",
+        cookie,
+        reportName: infoReport.name,
+        folderName: infoReport.storageName,
+        displayColumns: infoReport.displayColumns,
+        typeReport: infoReport.value,
+        params: {
+            "method": "getOrderList",
+            "params": {
+                "start": 0,
+                "pageSize": 25,
+                "channel": infoReport.value,
+                "state": "",
+                "search": "",
+                "timestart": "2024-07-07T17:00:00.000Z",
+                "timeend": "2024-08-07T16:59:59.999Z",
+                "typeCreated": "createdAt",
+                "company_id": infoReport.companyId
+            },
+            "token": infoReport.token
+        }
+    }
+    handleUploadReport(connectionId, token, body);
+}
