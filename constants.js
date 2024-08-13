@@ -20,6 +20,11 @@ const DATA_COMMONS = [
                 value: 2,
                 name: "Báo cáo hiệu quả sản phẩm",
                 storageName: "Shopee-Product effectiveness",
+            },
+            {
+                value: 3,
+                name: "Báo cáo chuyển đổi",
+                storageName: "Shopee-Seller Conversion Report",
             }
         ],
     },
@@ -41,6 +46,12 @@ const DATA_COMMONS = [
                 value: 2,
                 name: "Báo cáo hiệu quả sản phẩm",
                 storageName: "Tiktok-Product effectiveness",
+                formatUrl: ""
+            },
+            {
+                value: 3,
+                name: "Báo cáo chuyển đổi",
+                storageName: "Tiktok-Export Orders",
                 formatUrl: ""
             }
         ],
@@ -107,37 +118,37 @@ const DATA_COMMONS = [
             {
                 value: "Salework",
                 name: "Danh sách đơn hàng bán ngoài sàn",
-                storageName: "Orders",
+                storageName: "Salework-Orders",
                 formatUrl: "",
             },
             {
                 value: "Shopee",
                 name: "Danh sách đơn hàng shopee",
-                storageName: "Orders",
+                storageName: "Salework-Orders",
                 formatUrl: ""
             },
             {
                 value: "Lazada",
                 name: "Danh sách đơn hàng lazada",
-                storageName: "Orders",
+                storageName: "Salework-Orders",
                 formatUrl: ""
             },
             {
                 value: "Tiki",
                 name: "Danh sách đơn hàng tiki",
-                storageName: "Orders",
+                storageName: "Salework-Orders",
                 formatUrl: ""
             },
             {
                 value: "Tiktok",
                 name: "Danh sách đơn hàng tiktok",
-                storageName: "Orders",
+                storageName: "Salework-Orders",
                 formatUrl: ""
             },
             {
                 value: "STORE",
                 name: "Danh sách đơn hàng bán tại cửa hàng",
-                storageName: "Orders",
+                storageName: "Salework-Orders",
                 formatUrl: ""
             }
         ],

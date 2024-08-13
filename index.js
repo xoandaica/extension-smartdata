@@ -7,6 +7,8 @@ function cookieinfo(){
                 }
             }
         }
+        console.log("cookie shopee: ", DATA_COMMONS[0].cookie)
+        console.log("cookie tiktok: ", DATA_COMMONS[1].cookie)
     });
     //localStorage
     chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
@@ -43,6 +45,7 @@ function cookieinfo(){
                 })
             }
         }
+
     })
     //sessionStorage
     chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
@@ -104,33 +107,42 @@ function startSync(event){
     let node = event.target;
     let type = parseInt(node.getAttribute("typeInformationId"));
     let id = parseInt(node.getAttribute("connectionId"));
-    let typeReport = parseInt(document.getElementById(`typeReport${id}`).value);
-    if(isNaN(typeReport)){
-        typeReport = document.getElementById(`typeReport${id}`).value
-    }
+    // let typeReport = parseInt(document.getElementById(`typeReport${id}`).value);
+    // if(isNaN(typeReport)){
+    //     typeReport = document.getElementById(`typeReport${id}`).value
+    // }
     for(let item of DATA_COMMONS){
         if(item.typeInformations.includes(type)){
-            let folderName = "";
-            let inforReport = null;
-            if(item.reports){
-                for(let report of item.reports){
-                    if(report.value == typeReport){
-                        folderName = report.storageName;
-                        inforReport = report;
+            // if(item.reports){
+            //     for(let report of item.reports){
+            //         if(report.value == typeReport){
+            //             folderName = report.storageName;
+            //             inforReport = report;
+            //         }
+            //     }
+            // }
+            if(item.key === "ShoppeShop"){
+                if(item.reports){
+                    for(let report of item.reports){
+                        startSyncShopeeShop(report.value, report.storageName, id, token, item.cookie)
                     }
                 }
-            }
-            if(item.key === "ShoppeShop"){
-                startSyncShopeeShop(typeReport, folderName, id, token, item.cookie)
             }else if(item.key === "TikTokShop"){
-                startSyncTiktokShop(typeReport, folderName, id, token, item.cookie, item.userId);
+                if(item.reports){
+                    for(let report of item.reports){
+                        startSyncTiktokShop(report.value, report.storageName, id, token, item.cookie, item.userId);
+                    }
+                }
             }else if(item.key === "Lazada"){
 
             }else if(item.key === "Salework"){
-                inforReport["companyId"] = item.companyId;
-                inforReport["token"] = item.token;
-                inforReport["displayColumns"] = item.displayColumns;
-                startSyncSalework(inforReport, id, token, item.cookie);
+                for(let report of item.reports){
+                    let inforReport = {...report};
+                    inforReport["companyId"] = item.companyId;
+                    inforReport["token"] = item.token;
+                    inforReport["displayColumns"] = item.displayColumns;
+                    startSyncSalework(inforReport, id, token, item.cookie);
+                }
             }
         }
     }
@@ -170,9 +182,8 @@ function viewDataConnection(data){
         let content = `<tr style="height:36px">
                             <td>${item.name}</td>
                             <td>${getNameTypeInformation(item.typeInformation)}</td>
-                            <td>${contentSelect}</td>
                             <td>${contentSelect != "" ? contentButtonSync : ""}</td>
-                        </tr>`;
+                        </tr>`;//<td>${contentSelect}</td>
         contentHtml += content;
     }
     document.getElementById("contentTableConnection").innerHTML = contentHtml;
