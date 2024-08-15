@@ -1,5 +1,5 @@
-// const URL_BASE_SERVER = "https://powerdashboard.vn/"
-const URL_BASE_SERVER = "http://localhost:8082/"
+const URL_BASE_SERVER = "https://powerdashboard.vn/"
+// const URL_BASE_SERVER = "http://localhost:8082/"
 const URL_BASE_LOCAL = "http://localhost:8082/"
 
 var token = "";
