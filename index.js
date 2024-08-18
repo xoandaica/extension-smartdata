@@ -9,6 +9,7 @@ function cookieinfo(){
         }
         console.log("cookie shopee: ", DATA_COMMONS[0].cookie)
         console.log("cookie tiktok: ", DATA_COMMONS[1].cookie)
+        console.log("cookie lazada: ", DATA_COMMONS[2].cookie)
     });
     //localStorage
     chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
@@ -134,7 +135,11 @@ function startSync(event){
                     }
                 }
             }else if(item.key === "Lazada"){
-
+                if(item.reports){
+                    for(let report of item.reports){
+                        startSyncLazada(report.value, report.storageName, id, token, item.cookie);
+                    }
+                }
             }else if(item.key === "Salework"){
                 for(let report of item.reports){
                     let inforReport = {...report};
