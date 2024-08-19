@@ -230,7 +230,7 @@ function startSyncLazada(typeReport, folderName, connectionId, token, cookie){
     let dateStart = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 0, 0, 0, 0);
     let dateEnd = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 23, 59, 59, 999);
     let urlOverview = `https://sellercenter.lazada.vn/ba/sycm/lazada/faas/dashboard/realtime/key/detailV2.json?indexCode=pvNew%2CuvNew%2Crevenue%2Cbuyers%2Corders%2CconversionRate%2CrevenuePerBuyer%2CuvWorth`;
-    let urlPerformanceProduct = `https://sellercenter.lazada.vn/ba/sycm/lazada/faas/product/performance/batch/itemV2.json?dateRange=${yesStr}|${yesStr}&dateType=recent1&page=%d&pageSize=9999999&orderBy=productRevenue&order=desc`;
+    let urlPerformanceProduct = `https://sellercenter.lazada.vn/ba/sycm/lazada/faas/product/performance/batch/itemV2.json?dateRange=${yesStr}|${yesStr}&dateType=recent1&page=%d&pageSize=10&orderBy=productRevenue&order=desc`;
     let body = {
         urlOverview,
         urlPerformanceProduct,

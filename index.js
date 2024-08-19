@@ -219,6 +219,32 @@ function getAllConnection(){
    });
 }
 
+function pushDataInfoApiConnection(){
+    let url = URL_BASE_SERVER+"api/connect/connection/updateInfoApi";
+    toggleWaitingSync(true);
+    fetch(url, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(DATA_COMMONS)
+    }).then(response => {
+        response.json().then(data =>{
+            toggleWaitingSync(false);
+            if(data){
+                toggleSuccessSync(true);
+            }else{
+                toggleErrorSync(true);
+            }
+            setTimeout(function(){
+                toggleSuccessSync(false);
+                toggleErrorSync(false);
+            },2000)
+        })
+    });
+}
+
 function checkToken(){
     token = localStorage.getItem("token");
     if(!token){
@@ -234,7 +260,8 @@ function checkToken(){
             if(response.status == 200){
                 document.getElementById("boxLogin").classList.add("hidden");
                 document.getElementById("boxAction").classList.remove("hidden");
-                getAllConnection();
+                // getAllConnection();
+                pushDataInfoApiConnection();
             }else{
                 document.getElementById("boxLogin").classList.remove("hidden");
                 document.getElementById("boxAction").classList.add("hidden");
@@ -267,7 +294,8 @@ function asyncLogin(username, password){
                     document.getElementById("boxLogin").classList.add("hidden");
                     document.getElementById("boxAction").classList.remove("hidden");
                     localStorage.setItem("token", token);
-                    getAllConnection();
+                    // getAllConnection();
+                    pushDataInfoApiConnection();
                 }, 2000);
             });
         }else{
