@@ -1,16 +1,16 @@
 function cookieinfo(){
-    chrome.cookies.getAll({},function (cookies){
-        for(i=0;i<cookies.length;i++){
-            for(let data of DATA_COMMONS){
-                if(data.domains.includes(cookies[i].domain)){
-                    data.cookie = data.cookie + (data.cookie.length > 0 ? ";": "") + cookies[i].name +"="+cookies[i].value
-                }
-            }
-        }
-        // console.log("cookie shopee: ", DATA_COMMONS[0].cookie)
-        // console.log("cookie tiktok: ", DATA_COMMONS[1].cookie)
-        // console.log("cookie lazada: ", DATA_COMMONS[2].cookie)
-    });
+    // chrome.cookies.getAll({},function (cookies){
+    //     for(i=0;i<cookies.length;i++){
+    //         for(let data of DATA_COMMONS){
+    //             if(data.domains.includes(cookies[i].domain)){
+    //                 data.cookie = data.cookie + (data.cookie.length > 0 ? ";": "") + cookies[i].name +"="+cookies[i].value
+    //             }
+    //         }
+    //     }
+    //     // console.log("cookie shopee: ", DATA_COMMONS[0].cookie)
+    //     // console.log("cookie tiktok: ", DATA_COMMONS[1].cookie)
+    //     // console.log("cookie lazada: ", DATA_COMMONS[2].cookie)
+    // });
     //localStorage
     chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
         if(tabs){
@@ -21,6 +21,7 @@ function cookieinfo(){
                         return JSON.stringify({
                             localStorage: JSON.stringify(window.localStorage),
                             sessionStorage: JSON.stringify(window.sessionStorage),
+                            cookie: document.cookie
                         })
                     }
                 }).then(function(data){
@@ -30,6 +31,7 @@ function cookieinfo(){
                         if(url.indexOf(item.domains[0]) >= 0){
                             item.localStorage = JSON.parse(data.localStorage)
                             item.sessionStorage = JSON.parse(data.sessionStorage)
+                            item.cookie = data.cookie;
                         }
                     }
                 })
