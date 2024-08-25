@@ -10,6 +10,8 @@ const DATA_COMMONS = [
         typeInformations: [6],
         domains: ["banhang.shopee.vn", ".shopee.vn"],
         cookie: "",
+        localStorage: {},
+        sessionStorage: {},
         reports: [
             {
                 value: 1,
@@ -34,7 +36,8 @@ const DATA_COMMONS = [
         typeInformations: [8],
         domains: ["seller-vn.tiktok.com",".tiktok.com"],
         cookie: "",
-        userId: "",
+        localStorage: {},
+        sessionStorage: {},
         reports: [
             {
                 value: 1,
@@ -62,6 +65,8 @@ const DATA_COMMONS = [
         typeInformations: [9],
         domains: ["sellercenter.lazada.vn",".lazada.vn"],
         cookie: "",
+        localStorage: {},
+        sessionStorage: {},
         reports: [
             {
                 value: 1,
@@ -111,9 +116,8 @@ const DATA_COMMONS = [
         typeInformations: [16],
         domains: ["stock.salework.net",".salework.net"],
         cookie: "",
-        token: "",
-        companyId: "",
-        displayColumns: [],
+        localStorage: {},
+        sessionStorage: {},
         reports: [
             {
                 value: "Salework",

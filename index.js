@@ -7,9 +7,9 @@ function cookieinfo(){
                 }
             }
         }
-        console.log("cookie shopee: ", DATA_COMMONS[0].cookie)
-        console.log("cookie tiktok: ", DATA_COMMONS[1].cookie)
-        console.log("cookie lazada: ", DATA_COMMONS[2].cookie)
+        // console.log("cookie shopee: ", DATA_COMMONS[0].cookie)
+        // console.log("cookie tiktok: ", DATA_COMMONS[1].cookie)
+        // console.log("cookie lazada: ", DATA_COMMONS[2].cookie)
     });
     //localStorage
     chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
@@ -18,29 +18,18 @@ function cookieinfo(){
                 chrome.scripting.executeScript({
                     target: { tabId: tab.id },
                     func: () => {
-                      return JSON.stringify(localStorage)
+                        return JSON.stringify({
+                            localStorage: JSON.stringify(window.localStorage),
+                            sessionStorage: JSON.stringify(window.sessionStorage),
+                        })
                     }
                 }).then(function(data){
-                    for(let item of data){
-                        if(item.result){
-                            item.result = JSON.parse(item.result);
-                            Object.keys(item.result).forEach(keyLocalStorage => {
-                                if(keyLocalStorage === "__tea_cache_tokens_4068"){
-                                    let content = JSON.parse(item.result[keyLocalStorage]);
-                                    for(let dataCo of DATA_COMMONS){
-                                        if(dataCo.key == "TikTokShop"){
-                                            dataCo.userId = content.user_unique_id
-                                        }
-                                    }
-                                }else if(keyLocalStorage === "ShopeeOrderDisplayColumns"){
-                                    let content = JSON.parse(item.result[keyLocalStorage]);
-                                    for(let dataCo of DATA_COMMONS){
-                                        if(dataCo.key == "Salework"){
-                                            dataCo.displayColumns = content
-                                        }
-                                    }
-                                }
-                            })
+                    data = JSON.parse(data[0].result);
+                    let url = tab.url;
+                    for(let item of DATA_COMMONS){
+                        if(url.indexOf(item.domains[0]) >= 0){
+                            item.localStorage = JSON.parse(data.localStorage)
+                            item.sessionStorage = JSON.parse(data.sessionStorage)
                         }
                     }
                 })
@@ -49,41 +38,41 @@ function cookieinfo(){
 
     })
     //sessionStorage
-    chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
-        if(tabs){
-            for(let tab of tabs){
-                chrome.scripting.executeScript({
-                    target: { tabId: tab.id },
-                    func: () => {
-                      return JSON.stringify(sessionStorage)
-                    }
-                }).then(function(data){
-                    for(let item of data){
-                        if(item.result){
-                            item.result = JSON.parse(item.result);
-                            Object.keys(item.result).forEach(keySessionStorage => {
-                                if(keySessionStorage === "_um_dat_uhsetn"){
-                                    let content = item.result[keySessionStorage];
-                                    for(let dataCo of DATA_COMMONS){
-                                        if(dataCo.key == "Salework"){
-                                            dataCo.companyId = content
-                                        }
-                                    }
-                                }else if(keySessionStorage === "_um_dat_umsvtn"){
-                                    let content = item.result[keySessionStorage];
-                                    for(let dataCo of DATA_COMMONS){
-                                        if(dataCo.key == "Salework"){
-                                            dataCo.token = content
-                                        }
-                                    }
-                                }
-                            })
-                        }
-                    }
-                })
-            }
-        }
-    })
+    // chrome.tabs.query({ active: true, currentWindow: true }).then(function(tabs) {
+    //     if(tabs){
+    //         for(let tab of tabs){
+    //             chrome.scripting.executeScript({
+    //                 target: { tabId: tab.id },
+    //                 func: () => {
+    //                   return JSON.stringify(sessionStorage)
+    //                 }
+    //             }).then(function(data){
+    //                 for(let item of data){
+    //                     if(item.result){
+    //                         item.result = JSON.parse(item.result);
+    //                         Object.keys(item.result).forEach(keySessionStorage => {
+    //                             if(keySessionStorage === "_um_dat_uhsetn"){
+    //                                 let content = item.result[keySessionStorage];
+    //                                 for(let dataCo of DATA_COMMONS){
+    //                                     if(dataCo.key == "Salework"){
+    //                                         dataCo.companyId = content
+    //                                     }
+    //                                 }
+    //                             }else if(keySessionStorage === "_um_dat_umsvtn"){
+    //                                 let content = item.result[keySessionStorage];
+    //                                 for(let dataCo of DATA_COMMONS){
+    //                                     if(dataCo.key == "Salework"){
+    //                                         dataCo.token = content
+    //                                     }
+    //                                 }
+    //                             }
+    //                         })
+    //                     }
+    //                 }
+    //             })
+    //         }
+    //     }
+    // })
 }
 
 window.onload = cookieinfo;
@@ -240,6 +229,7 @@ function pushDataInfoApiConnection(){
             setTimeout(function(){
                 toggleSuccessSync(false);
                 toggleErrorSync(false);
+                window.close();
             },2000)
         })
     });
