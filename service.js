@@ -14,28 +14,31 @@ function enableButtonAction(){
 
 function toggleWaitingSync(flag){
     if(flag){
-        document.getElementById("messageWaitingSync").classList.remove("hidden");
-        document.getElementById("messageWaitingSync").innerHTML = "Đang thực hiện. Xin vui lòng chờ trong giây lát!";
+        document.getElementById("message").removeAttribute("class");
+        document.getElementById("message").classList.add("messageWaiting");
+        document.getElementById("message").innerHTML = "Đang thực hiện. Xin vui lòng chờ trong giây lát!";
     }else{
-        document.getElementById("messageWaitingSync").classList.add("hidden");
+        document.getElementById("message").classList.add("hidden");
     }
 }
 
 function toggleSuccessSync(flag){
     if(flag){
-        document.getElementById("messageSuccessSync").classList.remove("hidden");
-        document.getElementById("messageSuccessSync").innerHTML = "Thực hiện đồng bộ thành công!";
+        document.getElementById("message").removeAttribute("class");
+        document.getElementById("message").classList.add("messageSuccess");
+        document.getElementById("message").innerHTML = "Thực hiện đồng bộ thành công!";
     }else{
-        document.getElementById("messageSuccessSync").classList.add("hidden");
+        document.getElementById("message").classList.add("hidden");
     }
 }
 
 function toggleErrorSync(flag){
     if(flag){
-        document.getElementById("messageErrorSync").classList.remove("hidden");
-        document.getElementById("messageErrorSync").innerHTML = "Thực hiện đồng bộ thất bại!";
+        document.getElementById("message").removeAttribute("class");
+        document.getElementById("message").classList.add("messageError");
+        document.getElementById("message").innerHTML = "Thực hiện đồng bộ thất bại!";
     }else{
-        document.getElementById("messageErrorSync").classList.add("hidden");
+        document.getElementById("message").classList.add("hidden");
     }
 }
 

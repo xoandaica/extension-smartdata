@@ -7,49 +7,53 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="boxLogin" id="boxLogin">
-        <div class="headerLogin"></div>
-        <div class="bodyLogin">
-            <div class="titleLogin">
-                Đăng nhập
+    <div class="root">
+        <div id="message"></div>
+        <div class="boxLogin" id="boxLogin">
+            <img class="logo" src="./smartdata.png" />
+            <div class="headerLogin">
+                
             </div>
-            <form id="formLogin">
-                <input class="inputContent" type="text" name="username" id="username" placeholder="Email"/>
-                <input class="inputContent" type="password" name="password" id="password" placeholder="Password"/>
-                <div id="messageErrorLogin" class="messageError hidden"></div>
-                <div id="messageSuccessLogin" class="messageSuccess hidden"></div>
-            </form>
-            <button class="btn btnLogin" id="btnLogin">Đăng nhập</button>
+            <div class="bodyLogin">
+                <!-- <div class="titleLogin">
+                    Đăng nhập
+                </div> -->
+                <form id="formLogin">
+                    <div class="labelLogin">Thư điện tử/Số điện thoại</div>
+                    <input class="inputContent" type="text" name="username" id="username" placeholder="Thư điện tử/Số điện thoại"/>
+                    <div class="labelLogin">Mật khẩu</div>
+                    <input class="inputContent" type="password" name="password" id="password" placeholder="Mật khẩu"/>
+                </form>
+                <button class="btn btnLogin" id="btnLogin">Đăng nhập</button>
+            </div>
+            <div class="footerLogin"></div>
         </div>
-        <div class="footerLogin"></div>
-    </div>
-    <div class="boxAction hidden" id="boxAction">
-        <!-- <table border="1" class="tableConnection" style="border-collapse: collapse;margin-bottom: 12px;">
-            <thead>
-                <tr>
-                    <th style="width: 70%;">Tên kết nối</th>
-                    <th style="width: 20%;">Kênh kết nối</th>
-                    <th style="width: 10%;"></th>
-                </tr>
-            </thead>
-            <tbody id="contentTableConnection">
-                <tr>
-                    <td>Kết nối 1</td>
-                    <td>Shopee</td>
-                    <td>
-                        <select connectionId="connectionId">
-                            <option value="1">Đồng bộ báo cáo tổng quan</option>
-                            <option value="2">Đồng bộ báo cáo hiệu quả</option>
-                        </select>
-                    </td>
-                    <td><button class="btn btnAction" connectionId="connectionId">Bắt đầu</button></td>
-                </tr>
-            </tbody>
-        </table> -->
-        
-        <div id="messageSuccessSync" class="messageSuccess hidden"></div>
-        <div id="messageWaitingSync" class="messageWaiting hidden"></div>
-        <div id="messageErrorSync" class="messageError hidden"></div>
+        <div class="boxAction hidden" id="boxAction">
+            <button class="btn btnAction">Bắt đầu đồng bộ</button>
+            <button class="btn btnLogout">Đăng xuất</button>
+            <!-- <table border="1" class="tableConnection" style="border-collapse: collapse;margin-bottom: 12px;">
+                <thead>
+                    <tr>
+                        <th style="width: 70%;">Tên kết nối</th>
+                        <th style="width: 20%;">Kênh kết nối</th>
+                        <th style="width: 10%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="contentTableConnection">
+                    <tr>
+                        <td>Kết nối 1</td>
+                        <td>Shopee</td>
+                        <td>
+                            <select connectionId="connectionId">
+                                <option value="1">Đồng bộ báo cáo tổng quan</option>
+                                <option value="2">Đồng bộ báo cáo hiệu quả</option>
+                            </select>
+                        </td>
+                        <td><button class="btn btnAction" connectionId="connectionId">Bắt đầu</button></td>
+                    </tr>
+                </tbody>
+            </table> -->
+        </div>
     </div>
 </body>
 <script type="text/javascript" src="constants.js"></script>

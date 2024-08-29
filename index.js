@@ -81,13 +81,15 @@ window.onload = cookieinfo;
 
 function validateDataLogin(username, password){
     if((username || "").trim().length == 0){
-        document.getElementById("messageErrorLogin").classList.remove("hidden");
-        document.getElementById("messageErrorLogin").innerHTML = "Username không được để trống"
+        document.getElementById("message").classList.remove("hidden");
+        document.getElementById("message").classList.add("messageError");
+        document.getElementById("message").innerHTML = "Username không được để trống"
         return false;
     }
     if((password || "").trim().length == 0){
-        document.getElementById("messageErrorLogin").classList.remove("hidden");
-        document.getElementById("messageErrorLogin").innerHTML = "Password không được để trống"
+        document.getElementById("message").classList.remove("hidden");
+        document.getElementById("message").classList.add("messageError");
+        document.getElementById("message").innerHTML = "Password không được để trống"
         return false;
     }
     return true;
@@ -237,12 +239,25 @@ function pushDataInfoApiConnection(){
     });
 }
 
+function logout(){
+    localStorage.clear();
+    document.getElementById("boxAction").classList.add("hidden");
+    document.getElementById("boxLogin").classList.remove("hidden");
+    setTimeout(() => {
+        document.getElementById("btnLogin").addEventListener("click", login);
+    }, 100);
+}
+
 function checkToken(){
     token = localStorage.getItem("token");
     if(!token){
         document.getElementById("boxLogin").classList.remove("hidden");
+        document.getElementById("btnLogin").addEventListener("click", login);
         document.getElementById("boxAction").classList.add("hidden");
     }else{
+        document.getElementById("message").removeAttribute("class");
+        document.getElementById("message").classList.add("messageWaiting");
+        document.getElementById("message").innerHTML = "Đang kiểm tra tài khoản! Xin vui lòng chờ trong giây lát!"
         fetch(URL_BASE_SERVER + "api/auth/current",{
             method: "GET",
             headers: {
@@ -250,13 +265,36 @@ function checkToken(){
             }
         }).then(function(response){
             if(response.status == 200){
-                document.getElementById("boxLogin").classList.add("hidden");
-                document.getElementById("boxAction").classList.remove("hidden");
-                // getAllConnection();
-                pushDataInfoApiConnection();
+                document.getElementById("message").classList.remove("messageWaiting");
+                document.getElementById("message").classList.add("messageSuccess");
+                document.getElementById("message").innerHTML = "Xác thực tài khoản thành công!";
+                setTimeout(function(){
+                    document.getElementById("message").classList.add("hidden");
+                    document.getElementById("boxLogin").classList.add("hidden");
+                    document.getElementById("boxAction").classList.remove("hidden");
+                    setTimeout(() => {
+                        let arr = document.getElementsByClassName("btnAction");
+                        for(let i = 0; i < arr.length; i++) {
+                            arr[i].addEventListener("click", pushDataInfoApiConnection);
+                        }
+                        arr = document.getElementsByClassName("btnLogout");
+                        for(let i = 0; i < arr.length; i++) {
+                            arr[i].addEventListener("click", logout);
+                        }
+                    }, 100);
+                },1000)
             }else{
-                document.getElementById("boxLogin").classList.remove("hidden");
-                document.getElementById("boxAction").classList.add("hidden");
+                document.getElementById("message").classList.remove("messageWaiting");
+                document.getElementById("message").classList.add("messageError");
+                document.getElementById("message").innerHTML = "Xác thực tài khoản thất bại!";
+                setTimeout(function(){
+                    document.getElementById("message").classList.add("hidden");
+                    document.getElementById("boxLogin").classList.remove("hidden");
+                    setTimeout(() => {
+                        document.getElementById("btnLogin").addEventListener("click", login);
+                    }, 100);
+                    document.getElementById("boxAction").classList.add("hidden");
+                }, 2000)
             }
         }).catch(function(error){
             document.getElementById("boxLogin").classList.remove("hidden");
@@ -267,6 +305,10 @@ function checkToken(){
 checkToken();
 
 function asyncLogin(username, password){
+    document.getElementById("message").classList.remove("hidden");
+    document.getElementById("message").classList.remove("messageError");
+    document.getElementById("message").classList.add("messageWaiting");
+    document.getElementById("message").innerHTML = "Đang đăng nhập! Xin vui lòng chờ trong giây lát!"
     let formData = {username, password}
     fetch(URL_BASE_SERVER + "api/auth/login", {
         method: "POST",
@@ -279,27 +321,30 @@ function asyncLogin(username, password){
         if(response.ok){
             response.json().then(data =>{
                 token = data.data;
-                document.getElementById("messageSuccessLogin").classList.remove("hidden");
-                document.getElementById("messageSuccessLogin").innerHTML = "Đăng nhập thành công! Xin vui lòng chờ trong giây lát!"
+                document.getElementById("message").classList.remove("messageWaiting");
+                document.getElementById("message").classList.add("messageSuccess");
+                document.getElementById("message").innerHTML = "Đăng nhập thành công! Xin vui lòng chờ trong giây lát!"
                 setTimeout(() => {
-                    document.getElementById("messageSuccessLogin").classList.add("hidden");
+                    document.getElementById("message").classList.add("hidden");
                     document.getElementById("boxLogin").classList.add("hidden");
                     document.getElementById("boxAction").classList.remove("hidden");
                     localStorage.setItem("token", token);
-                    // getAllConnection();
-                    pushDataInfoApiConnection();
                 }, 2000);
             });
         }else{
-            document.getElementById("messageErrorLogin").classList.remove("hidden");
-            document.getElementById("messageErrorLogin").innerHTML = "Tài khoản hoặc mật khẩu không đúng"
-            document.getElementById("btnLogin").removeAttribute("disabled");
+            document.getElementById("message").classList.remove("messageWaiting");
+            document.getElementById("message").classList.add("messageError");
+            document.getElementById("message").innerHTML = "Tài khoản hoặc mật khẩu không đúng"
+            setTimeout(() => {
+                document.getElementById("message").classList.add("hidden");
+                document.getElementById("btnLogin").removeAttribute("disabled");
+            }, 2000);
         }
     })
 }
 
 function login(){
-    document.getElementById("messageErrorLogin").classList.add("hidden");
+    document.getElementById("message").removeAttribute("class");
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
     if(validateDataLogin(username,password)){
@@ -307,5 +352,3 @@ function login(){
         asyncLogin(username, password);
     }
 }
-
-document.getElementById("btnLogin").addEventListener("click", login);
