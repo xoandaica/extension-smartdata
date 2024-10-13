@@ -224,17 +224,19 @@ function pushDataInfoApiConnection(){
         body: JSON.stringify(DATA_COMMONS)
     }).then(response => {
         response.json().then(data =>{
-            toggleWaitingSync(false);
-            if(data){
-                toggleSuccessSync(true);
-            }else{
-                toggleErrorSync(true);
-            }
-            setTimeout(function(){
-                toggleSuccessSync(false);
-                toggleErrorSync(false);
-                window.close();
-            },2000)
+            setTimeout(() => {
+                toggleWaitingSync(false);
+                if(data){
+                    toggleSuccessSync(true);
+                }else{
+                    toggleErrorSync(true);
+                }
+                setTimeout(function(){
+                    toggleSuccessSync(false);
+                    toggleErrorSync(false);
+                    window.close();
+                },2000)
+            }, 2000)
         })
     });
 }
@@ -244,14 +246,17 @@ function logout(){
     document.getElementById("boxAction").classList.add("hidden");
     document.getElementById("boxLogin").classList.remove("hidden");
     setTimeout(() => {
+        document.getElementById("btnLogin").removeAttribute("disabled");
         document.getElementById("btnLogin").addEventListener("click", login);
     }, 100);
 }
 
 function checkToken(){
     token = localStorage.getItem("token");
+    document.getElementById("btnLogin").setAttribute("disabled","disabled");
     if(!token){
         document.getElementById("boxLogin").classList.remove("hidden");
+        document.getElementById("btnLogin").removeAttribute("disabled");
         document.getElementById("btnLogin").addEventListener("click", login);
         document.getElementById("boxAction").classList.add("hidden");
     }else{
@@ -292,6 +297,7 @@ function checkToken(){
                     document.getElementById("boxLogin").classList.remove("hidden");
                     setTimeout(() => {
                         document.getElementById("btnLogin").addEventListener("click", login);
+                        document.getElementById("btnLogin").removeAttribute("disabled");
                     }, 100);
                     document.getElementById("boxAction").classList.add("hidden");
                 }, 2000)
