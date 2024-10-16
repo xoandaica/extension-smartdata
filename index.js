@@ -333,11 +333,10 @@ function asyncLogin(username, password){
                 document.getElementById("message").classList.remove("messageWaiting");
                 document.getElementById("message").classList.add("messageSuccess");
                 document.getElementById("message").innerHTML = "Đăng nhập thành công! Xin vui lòng chờ trong giây lát!"
+                localStorage.setItem("token", token);
                 setTimeout(() => {
                     document.getElementById("message").classList.add("hidden");
-                    document.getElementById("boxLogin").classList.add("hidden");
-                    document.getElementById("boxAction").classList.remove("hidden");
-                    localStorage.setItem("token", token);
+                    checkToken();
                 }, 2000);
             });
         }else{
