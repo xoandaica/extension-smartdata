@@ -286,6 +286,9 @@ function checkToken(){
                         for(let i = 0; i < arr.length; i++) {
                             arr[i].addEventListener("click", logout);
                         }
+                        response.json().then(function(data){
+                            document.getElementById("nameOfUserLogin").innerHTML = `${data.name} (${data.email})`;
+                        })
                     }, 100);
                 },1000)
             }else{
