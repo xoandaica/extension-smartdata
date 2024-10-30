@@ -28,7 +28,14 @@ function cookieinfo(){
                     data = JSON.parse(data[0].result);
                     let url = tab.url;
                     for(let item of DATA_COMMONS){
-                        if(url.indexOf(item.domains[0]) >= 0){
+                        let check = false;
+                        for(let domain of item.domains){
+                            if(url.indexOf(domain)){
+                                check = true;
+                                break;
+                            }
+                        }
+                        if(check){
                             item.localStorage = JSON.parse(data.localStorage)
                             item.sessionStorage = JSON.parse(data.sessionStorage)
                             // item.cookie = data.cookie;
